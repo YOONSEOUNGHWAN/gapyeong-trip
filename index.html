@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>12/12(토) 가평 멍펜션 여행 · 8명 일정 &amp; 코스 투표</title>
+<meta name="description" content="12월 12일(토)~13일(일) 가평 멍펜션, 8명 친구 여행. 세 가지 코스를 비교하고 투표하세요.">
+<meta name="theme-color" content="#f7f3ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14120f" media="(prefers-color-scheme: dark)">
+<meta property="og:title" content="12/12(토) 가평 멍펜션 여행">
+<meta property="og:description" content="8명 단체 일정 &amp; 코스 투표 · 12/12(토)~13(일)">
+<meta property="og:type" content="website">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ── 인사 ─────────────────────────────────────────── -->
+  <header class="hero">
+    <div class="hero__art" aria-hidden="true">
+      <svg viewBox="0 0 390 120" preserveAspectRatio="none">
+        <path d="M0 98 L58 54 L96 82 L152 34 L206 84 L262 58 L318 92 L390 46 L390 120 L0 120 Z" fill="currentColor" opacity=".18"/>
+        <path d="M0 110 L44 78 L86 100 L134 66 L188 104 L244 76 L300 106 L352 82 L390 98 L390 120 L0 120 Z" fill="currentColor" opacity=".3"/>
+      </svg>
+    </div>
+    <div class="hero__top">
+      <span class="hero__date">12월 12일 토 – 13일 일 · 1박 2일</span>
+      <span class="hero__badge">8명</span>
+    </div>
+    <h1>12/12(토) 가평 멍펜션 여행</h1>
+    <p class="hero__sub">8명 단체 일정 &amp; 코스 투표</p>
+    <div class="hero__cta">
+      <a class="btn btn--primary" href="#plans">일정 3안 보기</a>
+      <a class="btn btn--ghost" href="#vote">바로 투표하기</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- ── 숙소 ───────────────────────────────────────── -->
+    <section class="card lodging" aria-labelledby="lodging-title">
+      <div class="lodging__head">
+        <span class="eyebrow">숙소</span>
+        <span class="pill pill--pine">입실 15:00 · 퇴실 11:00</span>
+      </div>
+      <h2 id="lodging-title">가평 멍펜션</h2>
+      <p class="lodging__addr">경기 가평군 조종면 현등사길 55-361</p>
+      <div class="lodging__rows">
+        <div class="lodging__row">
+          <span class="lodging__k">입실</span>
+          <span class="lodging__v"><b>15:00</b> 부터</span>
+        </div>
+        <div class="lodging__row">
+          <span class="lodging__k">퇴실</span>
+          <span class="lodging__v"><b>11:00</b> 까지</span>
+        </div>
+      </div>
+      <a class="stop__map stop__map--wide" href="http://place.map.kakao.com/1211575770" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+        카카오맵에서 위치 보기
+      </a>
+    </section>
+
+    <!-- ── 코스 3안 ───────────────────────────────────── -->
+    <section id="plans" class="plans" aria-labelledby="plans-title">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">일정</span>
+          <h2 id="plans-title">세 가지 코스</h2>
+        </div>
+        <span class="section-note">15:00 체크인 고정</span>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="코스 선택">
+        <span class="tabs__indicator" aria-hidden="true"></span>
+        <button class="tab is-active" role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1" data-plan="1">1안<span>현등사</span></button>
+        <button class="tab" role="tab" id="tab-2" aria-selected="false" aria-controls="panel-2" data-plan="2" tabindex="-1">2안<span>수목원</span></button>
+        <button class="tab" role="tab" id="tab-3" aria-selected="false" aria-controls="panel-3" data-plan="3" tabindex="-1">3안<span>레일바이크</span></button>
+      </div>
+
+      <div class="panels" id="planPanels"><!-- JS renders --></div>
+
+      <!-- 한눈에 비교 -->
+      <details class="compare">
+        <summary>
+          <span>세 코스 한눈에 비교</span>
+          <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <div class="compare__scroll">
+          <table class="cmp">
+            <caption class="sr-only">1안·2안·3안 일정 비교</caption>
+            <thead>
+              <tr>
+                <th scope="col"><span class="sr-only">항목</span></th>
+                <th scope="col" class="cmp__p1">1안<small>현등사</small></th>
+                <th scope="col" class="cmp__p2">2안<small>수목원</small></th>
+                <th scope="col" class="cmp__p3">3안<small>레일바이크</small></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">출발</th><td>10:30</td><td>10:00</td><td>09:30</td></tr>
+              <tr><th scope="row">첫 코스</th><td>점심 12:00</td><td>수목원 11:30</td><td>레일바이크 11:00</td></tr>
+              <tr><th scope="row">점심</th><td>12:00</td><td>13:10</td><td>12:40</td></tr>
+              <tr><th scope="row">체크인</th><td>15:00</td><td>15:00</td><td>15:00</td></tr>
+              <tr><th scope="row">한 줄</th><td>이동 최소</td><td>주차 편함</td><td>액티비티</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <!-- ── 투표 ───────────────────────────────────────── -->
+    <section id="vote" class="card vote" aria-labelledby="vote-title">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">투표</span>
+          <h2 id="vote-title">어느 코스로 갈까요?</h2>
+        </div>
+        <span class="mode" id="voteMode" title="저장 방식">연결 확인 중…</span>
+      </div>
+      <p class="section-desc">이름을 적고 코스를 고른 뒤 <b>투표하기</b>를 눌러 주세요. 한 사람 한 표, 다시 투표하면 바뀝니다.</p>
+
+      <form id="voteForm" autocomplete="off" novalidate>
+        <label class="field">
+          <span class="field__label">이름 (닉네임)</span>
+          <input id="nickname" name="nickname" type="text" maxlength="10" placeholder="예: 승환" enterkeyhint="done" autocomplete="off" spellcheck="false">
+        </label>
+
+        <div class="choices" id="choices" role="radiogroup" aria-label="코스 선택"><!-- JS renders --></div>
+
+        <button type="submit" class="btn btn--primary btn--block" id="voteSubmit">투표하기</button>
+        <p class="form-msg" id="voteMsg" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="results" id="results" aria-live="polite"><!-- JS renders --></div>
+    </section>
+
+    <!-- ── 체크리스트 ─────────────────────────────────── -->
+    <section id="checklist" class="checklist" aria-labelledby="check-title">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">준비</span>
+          <h2 id="check-title">체크리스트</h2>
+        </div>
+        <span class="section-note" id="checkTotal">0/0</span>
+      </div>
+      <div id="checkGroups"><!-- JS renders --></div>
+      <p class="hint">체크한 내용은 이 기기에만 저장돼요.</p>
+    </section>
+
+    <!-- ── 팁 ─────────────────────────────────────────── -->
+    <section class="tips" aria-labelledby="tips-title">
+      <h2 id="tips-title" class="sr-only">여행 팁</h2>
+      <article class="tip">
+        <span class="tip__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 9h16M6 9l1 10h10l1-10M9 9V6h6v3"/><path d="M10 13v3M14 13v3"/></svg>
+        </span>
+        <div>
+          <h3>바비큐 장보기</h3>
+          <p>8명 고기·술은 출발 전 <b>대형마트에서 1차 구매</b>를 추천해요. <b>하나로마트 조종점</b>에서는 음료·얼음·쌈채소만 보충하면 됩니다.</p>
+        </div>
+      </article>
+      <article class="tip">
+        <span class="tip__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg>
+        </span>
+        <div>
+          <h3>점심과 장보기는 한 동선</h3>
+          <p><b>청평K 숯불닭갈비막국수</b>와 <b>하나로마트 조종점</b>은 길 건너 맞은편, 도보 1분 거리예요.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>2026년 12월 12일(토) – 13일(일) · 가평 멍펜션 · 8명</p>
+    <p class="foot__sub">일정이 바뀌면 이 페이지에서 함께 확인해요</p>
+  </footer>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
