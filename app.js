@@ -244,6 +244,7 @@
   var selectedPlan = null;
   var busy = false;
   var pollTimer = null;
+  var pending = null;        // 서버에 아직 못 올린 내 표 { name, plan }
 
   function normName(raw) {
     return String(raw || '').replace(/\s+/g, ' ').trim().slice(0, 10);
@@ -324,17 +325,37 @@
       });
   }
 
+  /* 서버 표를 화면 상태로 반영. 아직 못 올린 내 표는 지우지 않는다. */
+  function applyRemote(remote) {
+    var next = remote || {};
+    if (pending && next[pending.name] === undefined) {
+      next[pending.name] = { plan: pending.plan, updated_at: new Date().toISOString() };
+    }
+    votes = next;
+    saveLocalVotes();
+    renderResults();
+    syncMine();
+  }
+
+  /* 실패해 둔 내 표를 다음 기회에 다시 올려 본다 */
+  function flushPending() {
+    if (!pending) return Promise.resolve();
+    var job = pending;
+    return sb('POST', TABLE + '?on_conflict=nickname', {
+      nickname: job.name, plan: job.plan, updated_at: new Date().toISOString()
+    }).then(function () {
+      if (pending && pending.name === job.name && pending.plan === job.plan) pending = null;
+    }).catch(function () { /* 다음 기회에 다시 */ });
+  }
+
   function initVotes() {
     votes = readLocalVotes();
     renderResults();
     setMode('checking');
 
     fetchRemoteVotes().then(function (remote) {
-      votes = remote;
-      saveLocalVotes();
       setMode('supa');
-      renderResults();
-      syncMine();
+      applyRemote(remote);
       startPolling();
     }).catch(function (err) {
       // 테이블이 없거나(PGRST205/404) 네트워크가 막힌 경우 → localStorage 폴백
@@ -352,11 +373,8 @@
     pollTimer = window.setInterval(function () {
       if (document.visibilityState !== 'visible') return;
       if (mode !== 'supa' || busy) return;
-      fetchRemoteVotes().then(function (remote) {
-        votes = remote;
-        saveLocalVotes();
-        renderResults();
-        syncMine();
+      flushPending().then(fetchRemoteVotes).then(function (remote) {
+        applyRemote(remote);
       }).catch(function () { /* 조용히 넘어감 */ });
     }, 20000);
   }
@@ -476,7 +494,7 @@
         '<button type="button" class="refresh" id="refreshVotes">' +
           '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg>새로고침' +
         '</button>' +
-        (mode === 'local' ? '<span class="results__sub">관리자 설정 전 · 이 기기에만</span>' : '') +
+        (mode === 'local' ? '<span class="results__sub">이 기기에만 저장 중</span>' : '') +
       '</div>';
 
     resultsEl.innerHTML = html;
@@ -487,11 +505,8 @@
         if (busy) return;
         if (mode === 'local') {
           fetchRemoteVotes().then(function (remote) {
-            votes = remote;
-            saveLocalVotes();
             setMode('supa');
-            renderResults();
-            syncMine();
+            applyRemote(remote);
             startPolling();
             setMsg('공유 저장소에 연결됐어요. 이제 친구들 표가 함께 보여요.', 'ok');
           }).catch(function () {
@@ -499,11 +514,8 @@
           });
           return;
         }
-        fetchRemoteVotes().then(function (remote) {
-          votes = remote;
-          saveLocalVotes();
-          renderResults();
-          syncMine();
+        flushPending().then(fetchRemoteVotes).then(function (remote) {
+          applyRemote(remote);
         }).catch(function () {
           setMsg('잠깐 새로고침하지 못했어요. 잠시 뒤 다시 눌러 주세요.', 'warn');
         });
@@ -520,27 +532,26 @@
       return sb('POST', TABLE + '?on_conflict=nickname', {
         nickname: name, plan: plan, updated_at: now
       }).then(function () {
+        pending = null;
         votes[name] = { plan: plan, updated_at: now };
         saveLocalVotes();
         busy = false;
         submitBtn.disabled = false;
         return 'supa';
-      }).catch(function (err) {
-        // 저장 실패 → 이 기기에는 남기고, 공유 저장소 상태를 다시 확인
+      }).catch(function () {
+        // 저장 실패 → 이 기기에는 남겨 두고, 다음 새로고침에서 다시 올려 본다
+        pending = { name: name, plan: plan };
         votes[name] = { plan: plan, updated_at: now };
         saveLocalVotes();
         busy = false;
         submitBtn.disabled = false;
         return fetchRemoteVotes().then(function (remote) {
-          // 다른 사람 표는 서버 것으로 갱신하되 내 표는 방금 고른 값 유지
-          var prev = votes[name];
-          votes = remote;
-          votes[name] = prev;
-          saveLocalVotes();
           setMode('supa');
+          applyRemote(remote);
           return 'local-only';
         }).catch(function () {
           setMode('local');
+          renderResults();
           return 'local-only';
         });
       });
@@ -584,13 +595,13 @@
         renderResults();
         syncMine();
         updateSubmitLabel();
-        var tail = where === 'supa'
-          ? ' 친구들에게도 함께 보여요.'
-          : ' 이 기기에만 저장했어요.';
+        var shared = where === 'supa';
+        var tail = shared ? ' 친구들에게도 함께 보여요.' : ' 다만 서버에 올리지 못해 이 기기에만 남았어요.';
+        var tone = shared ? 'ok' : 'warn';
         if (isChange) {
-          setMsg('<b>' + esc(name) + '</b> 님의 표를 <b>' + esc(planById(before).name) + '</b>에서 <b>' + esc(target.name) + '</b>으로 바꿨어요.' + tail, 'ok');
+          setMsg('<b>' + esc(name) + '</b> 님의 표를 <b>' + esc(planById(before).name) + '</b>에서 <b>' + esc(target.name) + '</b>으로 바꿨어요.' + tail, tone);
         } else {
-          setMsg('<b>' + esc(name) + '</b> 님의 표를 <b>' + esc(target.name) + '</b>으로 저장했어요.' + tail, 'ok');
+          setMsg('<b>' + esc(name) + '</b> 님의 표를 <b>' + esc(target.name) + '</b>으로 ' + (shared ? '저장했어요.' : '골랐어요.') + tail, tone);
         }
       }).catch(function () {
         setMsg('저장하지 못했어요. 잠시 뒤 다시 시도해 주세요.', 'warn');
